@@ -42,9 +42,12 @@ void printLampState() {
   
       for(int i=0; i < MAX_LAMPS; i++) {
         Serial.print("lamp ");
-        Serial.print(lampPin[i]);
-        Serial.print(" ");
+        Serial.print(( i + 1 ));        
+        Serial.print(" : ");
         Serial.print(lampState[i]);
+        Serial.print("    (Pin ");        
+        Serial.print(lampPin[i]);
+        Serial.print(")");
         Serial.print("\n");
       }
 }
@@ -170,24 +173,30 @@ void loop() {
     if (myCmd[5] == 'w')
     {
         port = decodePort(myCmd[6]);
-        
-        if (myCmd[7] == 'h')
+        if (port < 0)
         {
-          lampState[port] = HIGH;
-          Serial.println("HIGH");
-          sendAckOverSerial();
-        }
-        else if (myCmd[7] == 'l'){
-          lampState[port] = HIGH;
-          Serial.println("LOW");  
-          sendAckOverSerial();
+          Serial.println("NACK");  
         }
         else
         {
-          sendNackOverSerial();
+            if (myCmd[7] == 'h')
+            {
+              lampState[port] = HIGH;
+              Serial.println("HIGH");
+              sendAckOverSerial();
+            }
+            else if (myCmd[7] == 'l'){
+              lampState[port] = LOW;
+              Serial.println("LOW");  
+              sendAckOverSerial();
+            }
+            else
+            {
+              sendNackOverSerial();
+            }
+            
+            printLampState();
         }
-        
-        printLampState();
     }
     else if (myCmd[5] == 'r')
     {
@@ -283,9 +292,9 @@ void sendHelpOverSerial()
   Serial.println("----help is coming----");
   Serial.println("all commands must be prefixed with \"ollpe\"");
   Serial.println("----commands----");
-  Serial.println("w0h\t set port 0 high");
-  Serial.println("w0l\t set port 0 low");
-  Serial.println("r0\t returns binary state of port 0 (values 0,1)");
+  Serial.println("w1h\t set port 1 high");
+  Serial.println("w1l\t set port 1 low");
+  Serial.println("r1\t returns binary state of port 1 (values 0,1)");
   Serial.println("ping\t returns \"PACK\"");
   Serial.println("help\t prints this help");
   Serial.println("----help end----");
@@ -297,23 +306,24 @@ int decodePort(char c)
 {
  switch(c)
   {
-   case '0':
-   return 0;
    case '1':
-   return 1;
+     return 0;
    case '2':
-   return 2;
+     return 1;
    case '3':
-   return 3;
+     return 2;
    case '4':
-   return 4;
+     return 3;
    case '5':
-   return 5;
+     return 4;
    case '6':
-   return 6;
+     return 5;
    case '7':
+     return 6;
+   case '8':
+     return 7;
    default:
-   return 7;
+     return -1;
   } 
 }
 
