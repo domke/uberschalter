@@ -9,6 +9,11 @@ int lampState[MAX_LAMPS];
 
 #define DEADTIME  1  // Totzeit, in der die Lampen nicht reagieren (in Sekunden)
 
+// Serial fields
+int CMD_MAX = 128;
+char myCmd[128];
+int port;
+
 // Variables will change:
 int buttonState1 = LOW;             // the current reading from the input pin
 int buttonState2 = LOW;
@@ -147,8 +152,170 @@ void readButtons() {
 void loop() {
   readButtons();
   
+    //delay needed to have a chance to get the whole message
+  delay(50);
+  clearCmdArray();
+ 
+  int inputSize = readFromSerialIntoCmdArray();
+  
+  if (inputSize > 0)
+  {
+    //debug
+    Serial.print("receiced: ");
+    Serial.println(myCmd);
+    
+    int checkCmd = checkCmdArrayForPrefix();
+    if(checkCmd == 0){
+       Serial.println("if you dont know what to do type \"ollpehelp\"");
+       sendNackOverSerial();
+       return; 
+    }
+    //check for write command
+    if (myCmd[5] == 'w')
+    {
+        port = decodePort(myCmd[6]);
+        
+        if (myCmd[7] == 'h')
+        {
+          lampState[port] = HIGH;
+          Serial.println("HIGH");
+          sendAckOverSerial();
+        }
+        else if (myCmd[7] == 'l'){
+          lampState[port] = HIGH;
+          Serial.println("LOW");  
+          sendAckOverSerial();
+        }
+        else
+        {
+          sendNackOverSerial();
+        }
+    }
+    else if (myCmd[5] == 'r')
+    {
+      port = decodePort(myCmd[6]);      
+      Serial.println(lampState[port]);
+    }
+    //check for ping command
+    else if(myCmd[5] == 'p' 
+            && myCmd[6] == 'i' 
+            && myCmd[7] == 'n' 
+            && myCmd[8] == 'g')
+    {
+       sendPingAckOverSerial();
+    }
+    else if(myCmd[5] == 'h' 
+            && myCmd[6] == 'e' 
+            && myCmd[7] == 'l' 
+            && myCmd[8] == 'p')
+    {
+       sendHelpOverSerial();
+    }
+    else
+    {
+      //no write command
+       sendNackOverSerial(); 
+    }
+  }    
       
   for(int i=0; i < MAX_LAMPS; i++)
     digitalWrite(lampPin[i], lampState[i]);
+}
+
+
+// -------------- Serial Stuff ------------------
+
+void clearCmdArray(){
+  //clear the cmd array
+  for (int i = 0; i < CMD_MAX; i++){
+    myCmd[i] = '\0';
+  }
+}
+
+//returns number of read bytes
+int readFromSerialIntoCmdArray(){ 
+  //read from the serial buffer and flush
+  int inputSize = Serial.available();
+  
+  //give serial a chance to receive all bytes
+  if(inputSize > 0){
+    delay(100);
+    inputSize = Serial.available();
+  }
+  
+  if(inputSize > 0 && inputSize < CMD_MAX){
+    Serial.print("inputSize: ");
+    Serial.println(inputSize);
+    for (int i = 0; i < inputSize; i++){
+      myCmd[i] = Serial.read();
+    }
+  }else if(inputSize >= CMD_MAX){
+   Serial.flush();
+     Serial.println("too much data, flush");
+  }
+  return inputSize;
+}
+
+//check if command has the required prefix
+int checkCmdArrayForPrefix(){
+   if (myCmd[0] == 'o'
+     && myCmd[1] == 'l'
+     && myCmd[2] == 'l'
+     && myCmd[3] == 'p'
+     && myCmd[4] == 'e'){
+      return 1;
+   }
+  return 0;
+}
+
+void sendAckOverSerial(){
+  Serial.println("ACK");
+}
+
+void sendNackOverSerial(){
+  Serial.println("NACK");
+}
+
+void sendPingAckOverSerial(){
+  Serial.println("PACK");
+}
+
+void sendHelpOverSerial()
+{
+  Serial.println("----help is coming----");
+  Serial.println("all commands must be prefixed with \"ollpe\"");
+  Serial.println("----commands----");
+  Serial.println("w0h\t set port 0 high");
+  Serial.println("w0l\t set port 0 low");
+  Serial.println("r0\t returns binary state of port 0 (values 0,1)");
+  Serial.println("ping\t returns \"PACK\"");
+  Serial.println("help\t prints this help");
+  Serial.println("----help end----");
+}
+
+//converts a char with the port number 0-6
+//to the arduino port numbers
+int decodePort(char c)
+{
+ switch(c)
+  {
+   case '0':
+   return 0;
+   case '1':
+   return 1;
+   case '2':
+   return 2;
+   case '3':
+   return 3;
+   case '4':
+   return 4;
+   case '5':
+   return 5;
+   case '6':
+   return 6;
+   case '7':
+   default:
+   return 7;
+  } 
 }
 
