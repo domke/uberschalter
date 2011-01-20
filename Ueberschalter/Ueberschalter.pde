@@ -38,6 +38,17 @@ void setup() {
   Serial.print("Hello world.\n");
 }
 
+void printLampState() {
+  
+      for(int i=0; i < MAX_LAMPS; i++) {
+        Serial.print("lamp ");
+        Serial.print(lampPin[i]);
+        Serial.print(" ");
+        Serial.print(lampState[i]);
+        Serial.print("\n");
+      }
+}
+
 void button1pressed() 
 {
     int lampOnFound = 0;
@@ -52,17 +63,9 @@ void button1pressed()
   for(int i=0; i < 2; i++)
     lampState[i] = ! lampOnFound;
   
-    
-      for(int i=0; i < MAX_LAMPS; i++) {
-        Serial.print("lamp ");
-        Serial.print(lampPin[i]);
-        Serial.print(" ");
-        Serial.print(lampState[i]);
-        Serial.print("\n");
-      }
+  printLampState();
       
 }
-
 
 void button2pressed() 
 {
@@ -78,14 +81,7 @@ void button2pressed()
   for(int i=0; i < MAX_LAMPS; i++)
     lampState[i] = ! lampOnFound;
   
-    for(int i=0; i < MAX_LAMPS; i++) {
-        Serial.print("lamp ");
-        Serial.print(lampPin[i]);
-        Serial.print(" ");
-        Serial.print(lampState[i]);
-        Serial.print("\n");
-      }
-      
+  printLampState();
 }
 
 void readButtons() {
@@ -190,6 +186,8 @@ void loop() {
         {
           sendNackOverSerial();
         }
+        
+        printLampState();
     }
     else if (myCmd[5] == 'r')
     {
