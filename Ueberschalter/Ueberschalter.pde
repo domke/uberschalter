@@ -54,6 +54,7 @@ void printLampState() {
 
 void button1pressed() 
 {
+    // button 1 conrol only lamp 1 & 2
     int lampOnFound = 0;
     // search a lamp that is on
     for(int i=0; i < MAX_LAMPS; i++)
@@ -63,6 +64,7 @@ void button1pressed()
      }
   
   // When one lamp is on, set all to OFF
+  // When no lamp off, set all to ON
   for(int i=0; i < 2; i++)
     lampState[i] = ! lampOnFound;
   
@@ -72,6 +74,7 @@ void button1pressed()
 
 void button2pressed() 
 {
+  // button 2 conroll all lamps
   int lampOnFound = 0;
   // search a lamp that is on
   for(int i=0; i < MAX_LAMPS; i++)
@@ -81,6 +84,7 @@ void button2pressed()
     }
   
   // When one lamp is on, set all to OFF
+  // When no lamp off, set all to ON
   for(int i=0; i < MAX_LAMPS; i++)
     lampState[i] = ! lampOnFound;
   
@@ -179,23 +183,26 @@ void loop() {
         }
         else
         {
-            if (myCmd[7] == 'h')
+          if (((millis() - lastDebounceTime1) / 1000 > DEADTIME)||((millis() - lastDebounceTime2) / 1000 > DEADTIME))
             {
-              lampState[port] = HIGH;
-              Serial.println("HIGH");
-              sendAckOverSerial();
-            }
-            else if (myCmd[7] == 'l'){
-              lampState[port] = LOW;
-              Serial.println("LOW");  
-              sendAckOverSerial();
-            }
-            else
-            {
-              sendNackOverSerial();
-            }
+              if (myCmd[7] == 'h')
+              {
+                 lampState[port] = HIGH;
+                 Serial.println("HIGH");
+                 sendAckOverSerial(); 
+              }
+              else if (myCmd[7] == 'l'){
+                lampState[port] = LOW;
+                Serial.println("LOW");  
+                sendAckOverSerial();
+              }
+              else
+              {
+                sendNackOverSerial();
+              }
             
-            printLampState();
+              printLampState();
+           }
         }
     }
     else if (myCmd[5] == 'r')
