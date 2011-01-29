@@ -1,13 +1,13 @@
-#define MAX_LAMPS  8
+#define MAX_LAMPS 8
 
-// constants won't change. They're used here to 
+// constants won't change. They're used here to
 // set pin numbers:
-const int button1 = 10;     // the number of the pushbutton pin
+const int button1 = 10; // the number of the pushbutton pin
 const int button2 = 11;
-const int lampPin[] =  {2, 3, 4, 5, 6, 7, 8, 9};      // the number of the LED pin
+const int lampPin[] = {2, 3, 4, 5, 6, 7, 8, 9}; // the number of the LED pin
 int lampState[MAX_LAMPS];
 
-#define DEADTIME  1  // Totzeit, in der die Lampen nicht reagieren (in Sekunden)
+#define DEADTIME 1 // Totzeit, in der die Lampen nicht reagieren (in Sekunden)
 
 // Serial fields
 int CMD_MAX = 128;
@@ -15,12 +15,12 @@ char myCmd[128];
 int port;
 
 // Variables will change:
-int buttonState1 = LOW;             // the current reading from the input pin
+int buttonState1 = LOW; // the current reading from the input pin
 int buttonState2 = LOW;
-int lastButtonState1 = LOW;   // the previous reading from the input pin
+int lastButtonState1 = LOW; // the previous reading from the input pin
 int lastButtonState2 = LOW;
 
-long lastDebounceTime1 = 0;  // the last time the output pin was toggled
+long lastDebounceTime1 = 0; // the last time the output pin was toggled
 long lastDebounceTime2 = 0;
 
 void setup() {
@@ -40,19 +40,16 @@ void setup() {
 
 void printLampState() {
   
-      for(int i=0; i < MAX_LAMPS; i++) {
-        Serial.print("lamp ");
-        Serial.print(( i + 1 ));        
-        Serial.print(" : ");
-        Serial.print(lampState[i]);
-        Serial.print("    (Pin ");        
-        Serial.print(lampPin[i]);
-        Serial.print(")");
-        Serial.print("\n");
-      }
+  Serial.print("states ");
+  
+   for(int i=0; i < MAX_LAMPS; i++) {
+     Serial.print(lampState[i]);
+   }
+      
+   Serial.print("\n");
 }
 
-void button1pressed() 
+void button1pressed()
 {
     // button 1 conrol only lamp 1 & 2
     int lampOnFound = 0;
@@ -72,7 +69,7 @@ void button1pressed()
       
 }
 
-void button2pressed() 
+void button2pressed()
 {
   // button 2 conroll all lamps
   int lampOnFound = 0;
@@ -100,7 +97,7 @@ void readButtons() {
   {
     delay(50);
     if(digitalRead(button1) == HIGH && lastButtonState1 == LOW)
-    { 
+    {
       if ((millis() - lastDebounceTime1) / 1000 > DEADTIME) // DEADTIME! COOL OLLO STUFF inspirated by dome
       {
         lastDebounceTime1 = millis();
@@ -121,7 +118,7 @@ void readButtons() {
   }
   else
   {
-    lastButtonState1 = LOW; 
+    lastButtonState1 = LOW;
   }
 
 
@@ -131,7 +128,7 @@ void readButtons() {
   {
     delay(50);
     if(digitalRead(button2) == 1 && lastButtonState2 == LOW)
-    { 
+    {
       if ((millis() - lastDebounceTime2) / 1000 > DEADTIME)
       {
         lastDebounceTime2 = millis();
@@ -147,7 +144,7 @@ void readButtons() {
   }
   else
   {
-    lastButtonState2 = LOW; 
+    lastButtonState2 = LOW;
   }
 
 }
@@ -171,7 +168,7 @@ void loop() {
     if(checkCmd == 0){
        Serial.println("if you dont know what to do type \"ollpehelp\"");
        sendNackOverSerial();
-       return; 
+       return;
     }
     //check for write command
     if (myCmd[5] == 'w')
@@ -179,7 +176,7 @@ void loop() {
         port = decodePort(myCmd[6]);
         if (port < 0)
         {
-          Serial.println("NACK");  
+          Serial.println("NACK");
         }
         else
         {
@@ -189,11 +186,11 @@ void loop() {
               {
                  lampState[port] = HIGH;
                  Serial.println("HIGH");
-                 sendAckOverSerial(); 
+                 sendAckOverSerial();
               }
               else if (myCmd[7] == 'l'){
                 lampState[port] = LOW;
-                Serial.println("LOW");  
+                Serial.println("LOW");
                 sendAckOverSerial();
               }
               else
@@ -205,22 +202,27 @@ void loop() {
            }
         }
     }
+    else if (myCmd[5] == 'r'
+              && myCmd[6] == 'a')
+    {
+      printLampState();
+    }
     else if (myCmd[5] == 'r')
     {
-      port = decodePort(myCmd[6]);      
+      port = decodePort(myCmd[6]);
       Serial.println(lampState[port]);
     }
     //check for ping command
-    else if(myCmd[5] == 'p' 
-            && myCmd[6] == 'i' 
-            && myCmd[7] == 'n' 
+    else if(myCmd[5] == 'p'
+            && myCmd[6] == 'i'
+            && myCmd[7] == 'n'
             && myCmd[8] == 'g')
     {
        sendPingAckOverSerial();
     }
-    else if(myCmd[5] == 'h' 
-            && myCmd[6] == 'e' 
-            && myCmd[7] == 'l' 
+    else if(myCmd[5] == 'h'
+            && myCmd[6] == 'e'
+            && myCmd[7] == 'l'
             && myCmd[8] == 'p')
     {
        sendHelpOverSerial();
@@ -228,9 +230,9 @@ void loop() {
     else
     {
       //no write command
-       sendNackOverSerial(); 
+       sendNackOverSerial();
     }
-  }    
+  }
       
   for(int i=0; i < MAX_LAMPS; i++)
     digitalWrite(lampPin[i], lampState[i]);
@@ -247,7 +249,7 @@ void clearCmdArray(){
 }
 
 //returns number of read bytes
-int readFromSerialIntoCmdArray(){ 
+int readFromSerialIntoCmdArray(){
   //read from the serial buffer and flush
   int inputSize = Serial.available();
   
@@ -302,6 +304,7 @@ void sendHelpOverSerial()
   Serial.println("w1h\t set port 1 high");
   Serial.println("w1l\t set port 1 low");
   Serial.println("r1\t returns binary state of port 1 (values 0,1)");
+  Serial.println("ra\t returns binary state of all ports (values 0,1)");
   Serial.println("ping\t returns \"PACK\"");
   Serial.println("help\t prints this help");
   Serial.println("----help end----");
@@ -331,6 +334,5 @@ int decodePort(char c)
      return 7;
    default:
      return -1;
-  } 
+  }
 }
-
