@@ -186,19 +186,22 @@ void loop() {
               {
                  lampState[port] = HIGH;
                  Serial.println("HIGH");
-                 sendAckOverSerial();
+                 //sendAckOverSerial();
               }
               else if (myCmd[7] == 'l'){
                 lampState[port] = LOW;
                 Serial.println("LOW");
-                sendAckOverSerial();
+                //sendAckOverSerial();
               }
               else
               {
                 sendNackOverSerial();
+                return;  
               }
             
               printLampState();
+              sendAckOverSerial();
+              
            }
         }
     }
@@ -206,6 +209,7 @@ void loop() {
               && myCmd[6] == 'a')
     {
       printLampState();
+      sendAckOverSerial();
     }
     else if (myCmd[5] == 'r')
     {
