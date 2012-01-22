@@ -51,10 +51,10 @@ void printLampState() {
 
 void button1pressed()
 {
-    // button 1 conrol only lamp 1 & 2
+    // Only control the lamps for the hardware hacking area: aka lamp 5 & 6
     int lampOnFound = 0;
     // search a lamp that is on
-    for(int i=0; i < MAX_LAMPS; i++)
+    for(int i=4; i < MAX_LAMPS; i++)
      if (lampState[i] > 0) {
        lampOnFound = 1;
        break;
@@ -62,7 +62,7 @@ void button1pressed()
   
   // When one lamp is on, set all to OFF
   // When no lamp off, set all to ON
-  for(int i=0; i < 2; i++)
+  for(int i=4; i < MAX_LAMPS; i++) // only handle lamp 5 & 6 in array 4 & 5
     lampState[i] = ! lampOnFound;
   
   printLampState();
@@ -71,10 +71,10 @@ void button1pressed()
 
 void button2pressed()
 {
-  // button 2 conroll all lamps
+  // button 2 conroll all lamps of the room
   int lampOnFound = 0;
   // search a lamp that is on
-  for(int i=0; i < MAX_LAMPS; i++)
+  for(int i=0; i < 4; i++)
     if (lampState[i] > 0) {
       lampOnFound = 1;
       break;
@@ -82,7 +82,7 @@ void button2pressed()
   
   // When one lamp is on, set all to OFF
   // When no lamp off, set all to ON
-  for(int i=0; i < MAX_LAMPS; i++)
+  for(int i=0; i < 4; i++) // only handle lamp 1,2,3,4 in array: 0-3
     lampState[i] = ! lampOnFound;
   
   printLampState();
