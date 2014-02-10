@@ -2,8 +2,7 @@
 == Flashen ==
 * Arduino 1.0.5
 * Tools/Board/Arduino NG or old w/ ATmega 8
-* Tools/Board/Arduino NG or old w/ ATmega 8
-* Sketsch/Überprüfen / Kompillieren
+* Sketch/√ºberpr√ºfen / Kompillieren
 * Datei/Upload mit Programmer
 
 == Konfiguration ==
@@ -26,6 +25,7 @@ atmega8.bootloader.lock_bits=0x0F
 
 atmega8.build.mcu=atmega8
 #atmega8.build.f_cpu=16000000L
+# Wichtig! CPU Frequenz anpassen an Externen Quarz
 atmega8.build.f_cpu=3686000L
 atmega8.build.core=arduino
 atmega8.build.variant=standard
