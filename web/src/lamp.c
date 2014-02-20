@@ -13,11 +13,14 @@
 
 #define SER2NET_HOST	"10.23.43.31"
 
-void extractArguments(int* lamp, int* status)
+#define INPUTLAMP	"lamp="
+#define INPUTSTATE	"value="
+
+void extractArguments(int* lamp, char* status)
 {
   char buffer[512]; 
   int inputLength = 0;
-  char charlength[5];  
+  char* offset;
  
   if ( getenv("CONTENT_LENGTH") )
   {
@@ -27,6 +30,15 @@ void extractArguments(int* lamp, int* status)
     fread( buffer, inputLength, 1, stdin );
 
     fprintf(stderr, "Content: %s\n", buffer);
+    offset = strstr(buffer, INPUTLAMP);
+    if (offset)
+	*lamp = atoi(offset + strlen(INPUTLAMP));
+    
+    offset = strstr(buffer, INPUTSTATE);
+    if (offset)
+	*status = *(offset + strlen(INPUTSTATE));
+
+
   }
 }
 
@@ -51,6 +63,7 @@ void changeLampState(int lamp, int status)
    connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
   
    sprintf (sendline, "ollpew%d%c\n", lamp, (char) status);
+   fprintf(stderr, "Send over TCP: %s", sendline);
    sendto(sockfd, sendline, strlen(sendline), 0, 
 	(struct sockaddr *)&servaddr,sizeof(servaddr));
    offset=0;
@@ -96,11 +109,21 @@ void changeLampState(int lamp, int status)
 int main(void)
 {
   int lamp=0;
-  int status=0;
+  char status=' ';
   /* Extract the given parameter */
   extractArguments(&lamp, &status);
-  printf( "Content-Type: text/plain\n\n" );
-  changeLampState(5, HIGH);
+  fprintf(stderr, "Got %dto %c\n", lamp, status);
 
+  printf( "Content-Type: text/plain\n\n" );
+  switch (status)
+  {
+  case HIGH:
+  case LOW:
+    changeLampState(5, status);
+    break;
+  default:
+    break;
+  }
+  
   return 0;
 }
