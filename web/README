@@ -1,0 +1,4 @@
+= Webserver =
+== Requirements ==
+* lighttpd
+* custom plugin (see below)
