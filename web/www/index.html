@@ -6,8 +6,18 @@
 	<link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
 	<script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
-</head> 
+</head>
 <body> 
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $("#btn1").click(function(){
+        $("#debugOut").text("Hello");
+    }); 
+});
+
+</script>
 
 <div data-role="page">
 
@@ -17,7 +27,9 @@
 
 	<div data-role="content">	
 		<p>Hello world</p>
-		<input type="submit" value="Submit Button" />
+		<input id="btn1" type="submit" value="Submit Button" />
+
+		<div id="debugOut"></div>
 	</div><!-- /content -->
 
 </div><!-- /page -->
