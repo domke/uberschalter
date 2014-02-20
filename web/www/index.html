@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 	<head> 
-	<title>Lamp Control</title> 
+	<title>Lamp Pi</title> 
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
 	<script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
@@ -18,7 +18,11 @@ $(document).ready(function() {
 		var obj = jQuery.parseJSON( data );
 		
 		$("#debugOut").text( data );
-		$( "#btn5" ).value = obj.btn1 ;
+		if ( obj.btn1 === "1" )	{
+			$('#img5').attr('src','imgs/face-angel.png');
+		} else {
+			$('#img5').attr('src','imgs/face-sad.png');
+		}
 	});
     }); 
 });
@@ -34,8 +38,10 @@ $(document).ready(function() {
 	</div><!-- /header -->
 
 	<div data-role="content">	
-		<p>Hello world</p>
-		<input id="btn5" type="submit" value="Lamp 5" />
+		<div class="ui-btn ui-input-btn ui-shadow">
+			<img id="img5" style='float: left; margin: 4px;' src='imgs/face-angel.png' />Lamp 5
+			<input id="btn5" type="button" data-corners="false" data-enhanced="true"></input>
+		</div>
 
 		<div id="debugOut"></div>
 	</div><!-- /content -->
