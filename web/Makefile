@@ -1,0 +1,20 @@
+# Tiny Makefile to generate the CGI and start a lighttpd server for testing.
+
+CC=gcc
+CGIDIR=www/cgi-bin
+LAMPCGI=$(CGIDIR)/lamp.cgi
+
+all: lighttpdrun
+
+plugin:
+	$(CC) src/lamp.c -o $(LAMPCGI)
+
+lighttpdrun: plugin
+	sed -e "s|PWD|${PWD}|g" lighttpd_relative.conf > lighttpd.conf
+	@echo "====== Start LIGHTTPD ======="
+	lighttpd -f lighttpd.conf -D
+	rm -f lighttpd.conf
+
+clean:
+	rm -rf $(LAMPCGI)
+	rm -rf lighttpd.conf
