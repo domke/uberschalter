@@ -3,11 +3,12 @@
 CC=gcc
 CGIDIR=www/cgi-bin
 LAMPCGI=$(CGIDIR)/lamp.cgi
+LAMPSRC=src/lamp.c
 
 all: lighttpdrun
 
-plugin:
-	$(CC) src/lamp.c -o $(LAMPCGI)
+plugin: $(LAMPSRC)
+	$(CC) $(LAMPSRC) -o $(LAMPCGI)
 
 lighttpdrun: plugin
 	sed -e "s|PWD|${PWD}|g" lighttpd_relative.conf > lighttpd.conf
