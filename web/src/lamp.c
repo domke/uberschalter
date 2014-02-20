@@ -10,13 +10,16 @@ void extractArguments(int* lamp, int* status)
   char buffer[512]; 
   int inputLength = 0;
   char charlength[5];  
+ 
+  if ( getenv("CONTENT_LENGTH") )
+  {
+    inputLength = atoi( getenv("CONTENT_LENGTH") );
+    fprintf(stderr, "CONTENT_LENGTH=%d\n", inputLength);
+    inputLength = min( inputLength, sizeof(buffer)-1 ); /* Avoid buffer overflow */ 
+    fread( buffer, inputLength, 1, stdin );
 
-  inputLength = atoi( getenv("CONTENT_LENGTH") );
-  fprintf(stderr, "CONTENT_LENGTH=%d\n", inputLength);
-  inputLength = min( inputLength, sizeof(buffer)-1 ); /* Avoid buffer overflow */ 
-  fread( buffer, inputLength, 1, stdin );
-
-  fprintf(stderr, "Content: %s\n", buffer);
+    fprintf(stderr, "Content: %s\n", buffer);
+  }
 }
 
  
