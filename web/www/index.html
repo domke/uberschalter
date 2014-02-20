@@ -15,7 +15,7 @@ $(document).ready(function() {
     $("#btn1").click(function(){
         $("#debugOut").text("Hello");
 
-	$.post( "cgi-bin/lamp.cgi", function( data ) {
+	$.post( "cgi-bin/lamp.cgi", { lamp : "1", value: "on" }, function( data ) {
 		$( "#debugOut" ).html( data );
 	});
     }); 
