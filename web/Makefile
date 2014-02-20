@@ -1,6 +1,7 @@
 # Tiny Makefile to generate the CGI and start a lighttpd server for testing.
 
 CC=gcc
+CFLAGS=-g
 CGIDIR=www/cgi-bin
 LAMPCGI=$(CGIDIR)/lamp.cgi
 LAMPSRC=src/lamp.c
@@ -8,7 +9,7 @@ LAMPSRC=src/lamp.c
 all: lighttpdrun
 
 plugin: $(LAMPSRC)
-	$(CC) $(LAMPSRC) -o $(LAMPCGI)
+	$(CC) $(CFLAGS) $(LAMPSRC) -o $(LAMPCGI)
 
 lighttpdrun: plugin
 	sed -e "s|PWD|${PWD}|g" lighttpd_relative.conf > lighttpd.conf
