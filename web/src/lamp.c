@@ -30,6 +30,7 @@ void extractArguments(int* lamp, int* status)
 void changeLampState(int lamp, int status)
 {
    int sockfd,n;
+   int offset=0;
    struct sockaddr_in servaddr,cliaddr;
    char sendline[1000];
    char recvline[1000];
@@ -44,12 +45,16 @@ void changeLampState(int lamp, int status)
    connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
    sendto(sockfd, "ollpera\n", strlen("ollpera\n"), 0, 
 	(struct sockaddr *)&servaddr,sizeof(servaddr));
-   while(1) //FIXME endless LOOP
+   offset=0;
+   /* Opens the communication until the uC answers with an ACK */
+   while( !strstr(recvline, "ACK") )
    {
-      n=recvfrom(sockfd,recvline,10000,0,NULL,NULL);
-      recvline[n]=0;
-      fputs(recvline,stderr);
+      n=recvfrom(sockfd,recvline+offset,10000,0,NULL,NULL);
+      offset+=n;
    }
+   fprintf(stderr, "----------------\n");
+   fputs(recvline,stderr);
+   fprintf(stderr, "------  END -----\n");
 }
  
 int main(void)
