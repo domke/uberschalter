@@ -14,8 +14,14 @@
 $(document).ready(function() {
     $("#btn1").click(function(){
         $("#debugOut").text("Hello");
+
+	$.post( "cgi-bin/lamp.cgi", function( data ) {
+		$( "#debugOut" ).html( data );
+	});
     }); 
 });
+
+
 
 </script>
 

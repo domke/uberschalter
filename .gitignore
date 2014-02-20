@@ -1,3 +1,4 @@
 # All files to be ignored and not tracked by git are put here:
 lighttpd.conf
 *.cgi
+*.swp
