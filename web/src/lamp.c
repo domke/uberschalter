@@ -77,11 +77,16 @@ void changeLampState(int lamp, int status)
      fprintf(stderr, "state=%d\t[State=%s length=%d]\n", lampstate, states, n);
      if (lampstate)
      {
-        printf("{");
-	while (lampstate)
+        printf("{\n");
+	while (lampstate && n > 0)
 	{
-		printf("%d: %d, ", n--, lampstate % 10);
+		printf("btn%d: %d", n--, lampstate % 10);
 		lampstate = lampstate / 10;
+		if (n >= 1)
+		{
+		  printf(" ,");
+		}
+		 printf("\n");
 	}
         printf("}\n");
      }
@@ -94,7 +99,6 @@ int main(void)
   int status=0;
   /* Extract the given parameter */
   extractArguments(&lamp, &status);
-
   printf( "Content-Type: text/plain\n\n" );
   changeLampState(5, HIGH);
 

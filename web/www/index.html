@@ -16,7 +16,10 @@ $(document).ready(function() {
         $("#debugOut").text("Hello");
 
 	$.post( "cgi-bin/lamp.cgi", { lamp : "1", value: "on" }, function( data ) {
-		$( "#debugOut" ).html( data );
+		var obj = jQuery.parseJSON( data );
+		
+		$("#debugOut").text( data );
+		$( "#btn1" ).value( obj.btn1 );
 	});
     }); 
 });
