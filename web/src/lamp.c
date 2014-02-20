@@ -37,6 +37,10 @@ void changeLampState(int lamp, int status)
    struct sockaddr_in servaddr,cliaddr;
    char sendline[1000];
    char recvline[1000];
+   char* states=0;
+   char* end = 0;
+   int lampstate=0;
+   int lampIdx = 1;
 
    sockfd=socket(AF_INET,SOCK_STREAM,0);
 
@@ -57,9 +61,30 @@ void changeLampState(int lamp, int status)
       n=recvfrom(sockfd,recvline+offset,10000,0,NULL,NULL);
       offset+=n;
    }
-   fprintf(stderr, "----------------\n");
+   /*fprintf(stderr, "----------------\n");
    fputs(recvline,stderr);
-   fprintf(stderr, "------  END -----\n");
+   fprintf(stderr, "------  END -----\n"); */
+
+   /* Extract an json with the actual status */
+   states = strstr(recvline, "states");
+   if (states)
+   {
+     end = strchr(states, '\n'); 
+     n = (int) (end - states);
+     states[n]=0; /* insert an END instead of the newline */
+     lampstate=atoi(states + strlen("states "));
+     fprintf(stderr, "state=%d\t[State=%s length=%d]\n", lampstate, states + strlen("states "), n);
+     if (lampstate)
+     {
+        printf("{");
+	while (lampstate)
+	{
+		printf("%d: %d, ", lampIdx++, lampstate % 10);
+		lampstate = lampstate / 10;
+	}
+        printf("}\n");
+     }
+   }
 }
  
 int main(void)
@@ -69,9 +94,9 @@ int main(void)
   /* Extract the given parameter */
   extractArguments(&lamp, &status);
 
+  printf( "Content-Type: text/plain\n\n" );
   changeLampState(2, LOW);
 
-  printf( "Content-Type: text/plain\n\n" );
   printf("Hello from the CGI!\n");
   printf("LAMP=%d, STATUS=%d\n", lamp, status); //FIXME remove debugcode later
 
