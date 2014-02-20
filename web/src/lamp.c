@@ -40,7 +40,6 @@ void changeLampState(int lamp, int status)
    char* states=0;
    char* end = 0;
    int lampstate=0;
-   int lampIdx = 1;
 
    sockfd=socket(AF_INET,SOCK_STREAM,0);
 
@@ -69,17 +68,19 @@ void changeLampState(int lamp, int status)
    states = strstr(recvline, "states");
    if (states)
    {
+     /* skip states */
+     states += strlen("states ");
      end = strchr(states, '\n'); 
      n = (int) (end - states);
      states[n]=0; /* insert an END instead of the newline */
-     lampstate=atoi(states + strlen("states "));
-     fprintf(stderr, "state=%d\t[State=%s length=%d]\n", lampstate, states + strlen("states "), n);
+     lampstate=atoi(states);
+     fprintf(stderr, "state=%d\t[State=%s length=%d]\n", lampstate, states, n);
      if (lampstate)
      {
         printf("{");
 	while (lampstate)
 	{
-		printf("%d: %d, ", lampIdx++, lampstate % 10);
+		printf("%d: %d, ", n--, lampstate % 10);
 		lampstate = lampstate / 10;
 	}
         printf("}\n");
@@ -95,10 +96,7 @@ int main(void)
   extractArguments(&lamp, &status);
 
   printf( "Content-Type: text/plain\n\n" );
-  changeLampState(2, LOW);
-
-  printf("Hello from the CGI!\n");
-  printf("LAMP=%d, STATUS=%d\n", lamp, status); //FIXME remove debugcode later
+  changeLampState(5, HIGH);
 
   return 0;
 }
