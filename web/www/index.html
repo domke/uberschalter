@@ -12,14 +12,13 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-    $("#btn1").click(function(){
-        $("#debugOut").text("Hello");
 
+    $("#btn1").click(function(){
 	$.post( "cgi-bin/lamp.cgi", { lamp : "1", value: "on" }, function( data ) {
 		var obj = jQuery.parseJSON( data );
 		
 		$("#debugOut").text( data );
-		$( "#btn1" ).value( obj.btn1 );
+		$( "#btn1" ).value = obj.btn1 ;
 	});
     }); 
 });
@@ -36,7 +35,7 @@ $(document).ready(function() {
 
 	<div data-role="content">	
 		<p>Hello world</p>
-		<input id="btn1" type="submit" value="Submit Button" />
+		<input id="btn1" type="submit" value="Lamp 1" />
 
 		<div id="debugOut"></div>
 	</div><!-- /content -->
