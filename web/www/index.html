@@ -13,16 +13,16 @@
 
 $(document).ready(function() {
 
-    $("#btn5").click(function(){
-	$.post( "cgi-bin/lamp.cgi", { lamp : "5", value: "h" }, function( data ) {
+    $('input:checkbox').change(function(){
+    
+	$.post( "cgi-bin/lamp.cgi", { lamp : this.name, value: (this.checked) ? 'h':'l' }, function( data ) {
 		var obj = jQuery.parseJSON( data );
 		
-		$("#debugOut").text( data );
-		if ( obj.btn1 === "1" )	{
-			$('#img5').attr('src','imgs/face-angel.png');
-		} else {
-			$('#img5').attr('src','imgs/face-sad.png');
+		for (var i=1;i<7;i++){
+		    $('#'+i).prop('checked', (obj.i == 'h') ? true : false);
+		
 		}
+		alert(data);
 	});
     }); 
 });
@@ -37,14 +37,25 @@ $(document).ready(function() {
 		<h1>Lamp control (Ueberschalter)</h1>
 	</div><!-- /header -->
 
-	<div data-role="content">	
-		<div class="ui-btn ui-input-btn ui-shadow">
-			<img id="img5" style='float: left; margin: 4px;' src='imgs/face-angel.png' />Lamp 5
-			<input id="btn5" type="button" data-corners="false" data-enhanced="true"></input>
-		</div>
+	<div data-role="content">
+		<div class="content-primary">
 
-		<div id="debugOut"></div>
-	</div><!-- /content -->
+		<form action="#" method="get">
+			<label for="1"> Lampe #1</label>
+			<input type="checkbox" data-role="flipswitch" name="1" id="1">
+			<label for="2"> Lampe #2</label>
+			<input type="checkbox" data-role="flipswitch" name="2" id="2">
+			<label for="3"> Lampe #3</label>
+			<input type="checkbox" data-role="flipswitch" name="3" id="3">
+			<label for="4"> Lampe #4</label>
+			<input type="checkbox" data-role="flipswitch" name="4" id="4">
+			<label for="5"> Lampe #5</label>
+			<input type="checkbox" data-role="flipswitch" name="5" id="5">
+			<label for="6"> Lampe #6</label>
+			<input type="checkbox" data-role="flipswitch" name="6" id="6">
+		</form>
+		</div>
+	</div>
 
 </div><!-- /page -->
 
