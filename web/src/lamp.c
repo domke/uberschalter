@@ -61,8 +61,14 @@ void changeLampState(int lamp, int status)
    servaddr.sin_port=htons(2001);
    
    connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
-  
-   sprintf (sendline, "ollpew%d%c\n", lamp, (char) status);
+   if ((char) status == ' ') /* Display only the actual status of the lamps */
+   {
+      sprintf (sendline, "ollpera\n");
+   }
+   else
+   {
+      sprintf (sendline, "ollpew%d%c\n", lamp, (char) status);
+   }
    fprintf(stderr, "Send over TCP: %s", sendline);
    sendto(sockfd, sendline, strlen(sendline), 0, 
 	(struct sockaddr *)&servaddr,sizeof(servaddr));
@@ -119,9 +125,10 @@ int main(void)
   {
   case HIGH:
   case LOW:
-    changeLampState(5, status);
+    changeLampState(lamp, status);
     break;
   default:
+    changeLampState(0, ' ');
     break;
   }
   
