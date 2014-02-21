@@ -9,6 +9,7 @@ LAMPSRC=src/lamp.c
 all: lighttpdrun
 
 plugin: $(LAMPSRC)
+	mkdir -p $(CGIDIR)
 	$(CC) $(CFLAGS) $(LAMPSRC) -o $(LAMPCGI)
 
 lighttpdrun: plugin
