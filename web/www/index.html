@@ -1,11 +1,11 @@
 <!DOCTYPE html> 
 <html> 
-	<head> 
-	<title>Lamp Pi</title> 
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
-	<script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
+        <head> 
+        <title>Lamp Pi</title> 
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
+        <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
 </head>
 <body> 
 
@@ -13,38 +13,59 @@
 
 $(document).ready(function() {
 
-    $("#btn5").click(function(){
-	$.post( "cgi-bin/lamp.cgi", { lamp : "5", value: "h" }, function( data ) {
-		var obj = jQuery.parseJSON( data );
-		
-		$("#debugOut").text( data );
-		if ( obj.btn1 === "1" )	{
-			$('#img5').attr('src','imgs/face-angel.png');
-		} else {
-			$('#img5').attr('src','imgs/face-sad.png');
-		}
-	});
+    $('input:checkbox').change(function(){
+    
+        $.post( "cgi-bin/lamp.cgi", { lamp : this.name, value: (this.checked) ? 'h':'l' }, function( data ) {
+                var obj = jQuery.parseJSON( data );
+		getState();
+        });
     }); 
-});
+    
+});    
+   
 
+function getState() {
+	 $.get("cgi-bin/lamp.cgi", function(data){
+                var obj = jQuery.parseJSON( data );
+                for (var i=1;i<7;i++){
+			$('#'+i).prop('checked',(obj[i] == 'h') ? true : false).trigger('create').checkboxradio('refresh');
+                }
 
+    	});
+    
+};
+
+getState();
+
+window.setInterval(getState, 2000);
 
 </script>
 
 <div data-role="page">
 
-	<div data-role="header">
-		<h1>Lamp control (Ueberschalter)</h1>
-	</div><!-- /header -->
+        <div data-role="header">
+                <h1>Lamp control (Ueberschalter)</h1>
+        </div><!-- /header -->
 
-	<div data-role="content">	
-		<div class="ui-btn ui-input-btn ui-shadow">
-			<img id="img5" style='float: left; margin: 4px;' src='imgs/face-angel.png' />Lamp 5
-			<input id="btn5" type="button" data-corners="false" data-enhanced="true"></input>
-		</div>
+        <div data-role="content">
+                <div class="content-primary">
 
-		<div id="debugOut"></div>
-	</div><!-- /content -->
+                <form action="#" method="get">
+                        <label for="1"> Lampe #1</label>
+                        <input type="checkbox" data-role="flipswitch" name="1" id="1" checked="checked">
+                        <label for="2"> Lampe #2</label>
+                        <input type="checkbox" data-role="flipswitch" name="2" id="2" checked="checked">
+                        <label for="3"> Lampe #3</label>
+                        <input type="checkbox" data-role="flipswitch" name="3" id="3" checked="checked">
+                        <label for="4"> Lampe #4</label>
+                        <input type="checkbox" data-role="flipswitch" name="4" id="4" checked="checked">
+                        <label for="5"> Lampe #5</label>
+                        <input type="checkbox" data-role="flipswitch" name="5" id="5" checked="checked">
+                        <label for="6"> Lampe #6</label>
+                        <input type="checkbox" data-role="flipswitch" name="6" id="6" checked="checked">
+                </form>
+                </div>
+        </div>
 
 </div><!-- /page -->
 
