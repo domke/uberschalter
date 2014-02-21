@@ -10,7 +10,7 @@
 #define LOW		'l'
 #define	HIGH		'h'
 
-#define SER2NET_HOST	"10.23.43.31"
+#define SER2NET_HOST	"127.0.0.1"
 
 #define INPUTLAMP	"lamp="
 #define INPUTSTATE	"value="
