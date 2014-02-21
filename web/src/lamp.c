@@ -99,7 +99,7 @@ void changeLampState(int lamp, int status)
         printf("{\n");
 	while (lampstate && n > 0)
 	{
-		printf("\"btn%d\": \"%d\"", n--, lampstate % 10);
+		printf("\"%d\": \"%c\"", n--, (lampstate % 10) ? 'h' : 'l');
 		lampstate = lampstate / 10;
 		if (n >= 1)
 		{
