@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>C3MA Lamp Controller</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="css/uberschalter.css" rel="stylesheet">   
+  </head>
+  <body>
+<div class="container text-center">
+	<h2>C3MA Lamp Controller</h2>
+</div>
+
+
+<div class="container-fluid">
+	<div class="row">
+  		<div class="col-sm-6">
+			<div class="panel panel-default">
+  				<div class="panel-heading">
+    					<h3 class="panel-title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Hauptraum</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<button type="button" name="group-main-on" class="btn btn-block btn-success">Gruppe An</button>
+						</div>
+						<div class="col-xs-6">
+							<button type="button" name="group-main-off" class="btn btn-block btn-danger">Gruppe Aus</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-6 text-center">
+							Lampe 1
+							<input type="checkbox" name="lamp-1" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+						<div class="col-xs-6 text-center">
+							Lampe 2
+							<input type="checkbox" name="lamp-2" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-6 text-center">
+							Lampe 3
+							<input type="checkbox" name="lamp-3" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+						<div class="col-xs-6 text-center">
+							Lampe 4
+							<input type="checkbox" name="lamp-4" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Werkstatt</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<button type="button" name="group-workshop-on" class="btn btn-block btn-success">Gruppe An</button>
+						</div>
+						<div class="col-xs-6">
+							<button type="button" name="group-workshop-off" class="btn btn-block btn-danger">Gruppe Aus</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-6 text-center">
+							Lampe 5
+							<input type="checkbox" name="lamp-5" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+						<div class="col-xs-6 text-center">
+							Lampe 6
+							<input type="checkbox" name="lamp-6" data-size="small" data-on-text="An" data-off-text="Aus">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/uberschalter.js"></script>
+  </body>
+</html>
+
