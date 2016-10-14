@@ -1,11 +1,11 @@
-= Ardunio =
-== Flashen ==
+# Ardunio
+## Flashen
 * Arduino 1.0.5
 * Tools/Board/Arduino NG or old w/ ATmega 8
 * Sketch/überprüfen / Kompillieren
 * Datei/Upload mit Programmer
 
-== Konfiguration ==
+## Konfiguration
 /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/boards.txt:
 
 ##############################################################
@@ -27,5 +27,5 @@ atmega8.build.f_cpu=3686000L
 atmega8.build.core=arduino
 atmega8.build.variant=standard
 ```
-** Wichtig! CPU Frequenz anpassen an Externen Quarz**
+__ Wichtig! CPU Frequenz anpassen an Externen Quarz __
 
