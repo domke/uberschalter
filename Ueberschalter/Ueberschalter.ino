@@ -1,4 +1,6 @@
 
+#define VERSION "2.0"
+
 #include <avr/interrupt.h>
 #include <avr/io.h> 
 
@@ -56,7 +58,7 @@ void setup() {
   // start serial port at 9600 bps:
   Serial.begin(9600);
   pinMode(UART_UWE, OUTPUT);
-  RS485_PRINT("Hello world.\n");
+  RS485_PRINT("Ueberschalter "VERSION"\nof " __DATE__ "\n");
 }
 
 void printLampState() {
