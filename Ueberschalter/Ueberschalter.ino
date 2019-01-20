@@ -9,8 +9,8 @@
  ****************************************************************************/
  
 #define UART_UWE 2 /* (PD2) Pin for UART WRITE ENABLE */
-#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH); Serial.print(line); }
-#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH); Serial.println(line); }
+#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH); Serial.print(line); delay(5); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
+#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH); Serial.println(line); delay(5); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
 
 /****************************************************************************
  *  Hardware configuration
@@ -58,6 +58,13 @@ void setup() {
   // start serial port at 9600 bps:
   Serial.begin(9600);
   pinMode(UART_UWE, OUTPUT);
+  digitalWrite(UART_UWE, LOW);
+  
+   /* TODO enabel interrupts
+    * UCSRB |= (1 << TXCIE);   // Turn on the transmission, reception, and Receive interrupt     
+   interrupts();
+   */
+  
   RS485_PRINT("Ueberschalter "VERSION"\nof " __DATE__ "\n");
 }
 
