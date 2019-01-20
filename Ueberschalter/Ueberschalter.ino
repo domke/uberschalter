@@ -1,5 +1,19 @@
-#define MAX_LAMPS 10
 
+#include <avr/interrupt.h>
+#include <avr/io.h> 
+
+/****************************************************************************
+ *  RS485 Communication
+ ****************************************************************************/
+ 
+#define UART_UWE 2 /* (PD2) Pin for UART WRITE ENABLE */
+#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH); Serial.print(line); }
+#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH); Serial.println(line); }
+
+/****************************************************************************
+ *  Hardware configuration
+ ****************************************************************************/
+#define MAX_LAMPS 10
 // constants won't change. They're used here to
 // set pin numbers:
 const int button1 = 7; // the number of the pushbutton pin
@@ -23,6 +37,12 @@ int lastButtonState2 = LOW;
 long lastDebounceTime1 = 0; // the last time the output pin was toggled
 long lastDebounceTime2 = 0;
 
+/* Reset Write Enable pin, when all data is transmitted */
+ISR(USART0_TXC)
+{ 
+  digitalWrite(UART_UWE, LOW);
+}
+
 void setup() {
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
@@ -35,18 +55,19 @@ void setup() {
  
   // start serial port at 9600 bps:
   Serial.begin(9600);
-  Serial.print("Hello world.\n");
+  pinMode(UART_UWE, OUTPUT);
+  RS485_PRINT("Hello world.\n");
 }
 
 void printLampState() {
   
-  Serial.print("states ");
+  RS485_PRINT("states ");
   
    for(int i=0; i < MAX_LAMPS; i++) {
-     Serial.print(lampState[i]);
+     RS485_PRINT(lampState[i]);
    }
       
-   Serial.print("\n");
+   RS485_PRINT("\n");
 }
 
 void button1pressed()
@@ -102,7 +123,7 @@ void readButtons() {
       {
         lastDebounceTime1 = millis();
         
-        Serial.println("button1 toggled");
+        RS485_PRINTLN("button1 toggled");
         
         button1pressed();
         
@@ -133,7 +154,7 @@ void readButtons() {
       {
         lastDebounceTime2 = millis();
         
-        Serial.println("button2 toggled");
+        RS485_PRINTLN("button2 toggled");
         buttonState2 = !buttonState2;
         button2pressed();
         
@@ -161,12 +182,12 @@ void loop() {
   if (inputSize > 0)
   {
     //debug
-    Serial.print("receiced: ");
-    Serial.println(myCmd);
+    RS485_PRINT("receiced: ");
+    RS485_PRINTLN(myCmd);
     
     int checkCmd = checkCmdArrayForPrefix();
     if(checkCmd == 0){
-       Serial.println("if you dont know what to do type \"ollpehelp\"");
+       RS485_PRINTLN("if you dont know what to do type \"ollpehelp\"");
        sendNackOverSerial();
        return;
     }
@@ -176,7 +197,7 @@ void loop() {
         port = decodePort(myCmd[6]);
         if (port < 0)
         {
-          Serial.println("NACK");
+          RS485_PRINTLN("NACK");
         }
         else
         {
@@ -185,12 +206,12 @@ void loop() {
               if (myCmd[7] == 'h')
               {
                  lampState[port] = HIGH;
-                 Serial.println("HIGH");
+                 RS485_PRINTLN("HIGH");
                  //sendAckOverSerial();
               }
               else if (myCmd[7] == 'l'){
                 lampState[port] = LOW;
-                Serial.println("LOW");
+                RS485_PRINTLN("LOW");
                 //sendAckOverSerial();
               }
               else
@@ -214,7 +235,7 @@ void loop() {
     else if (myCmd[5] == 'r')
     {
       port = decodePort(myCmd[6]);
-      Serial.println(lampState[port]);
+      RS485_PRINTLN(lampState[port]);
     }
     //check for ping command
     else if(myCmd[5] == 'p'
@@ -264,14 +285,14 @@ int readFromSerialIntoCmdArray(){
   }
   
   if(inputSize > 0 && inputSize < CMD_MAX){
-    Serial.print("inputSize: ");
-    Serial.println(inputSize);
+    RS485_PRINT("inputSize: ");
+    RS485_PRINTLN(inputSize);
     for (int i = 0; i < inputSize; i++){
       myCmd[i] = Serial.read();
     }
   }else if(inputSize >= CMD_MAX){
    Serial.flush();
-     Serial.println("too much data, flush");
+     RS485_PRINTLN("too much data, flush");
   }
   return inputSize;
 }
@@ -289,29 +310,29 @@ int checkCmdArrayForPrefix(){
 }
 
 void sendAckOverSerial(){
-  Serial.println("ACK");
+  RS485_PRINTLN("ACK");
 }
 
 void sendNackOverSerial(){
-  Serial.println("NACK");
+  RS485_PRINTLN("NACK");
 }
 
 void sendPingAckOverSerial(){
-  Serial.println("PACK");
+  RS485_PRINTLN("PACK");
 }
 
 void sendHelpOverSerial()
 {
-  Serial.println("----help is coming----");
-  Serial.println("all commands must be prefixed with \"ollpe\"");
-  Serial.println("----commands----");
-  Serial.println("w1h\t set port 1 high");
-  Serial.println("w1l\t set port 1 low");
-  Serial.println("r1\t returns binary state of port 1 (values 0,1)");
-  Serial.println("ra\t returns binary state of all ports (values 0,1)");
-  Serial.println("ping\t returns \"PACK\"");
-  Serial.println("help\t prints this help");
-  Serial.println("----help end----");
+  RS485_PRINTLN("----help is coming----");
+  RS485_PRINTLN("all commands must be prefixed with \"ollpe\"");
+  RS485_PRINTLN("----commands----");
+  RS485_PRINTLN("w1h\t set port 1 high");
+  RS485_PRINTLN("w1l\t set port 1 low");
+  RS485_PRINTLN("r1\t returns binary state of port 1 (values 0,1)");
+  RS485_PRINTLN("ra\t returns binary state of all ports (values 0,1)");
+  RS485_PRINTLN("ping\t returns \"PACK\"");
+  RS485_PRINTLN("help\t prints this help");
+  RS485_PRINTLN("----help end----");
 }
 
 //converts a char with the port number 0-6
