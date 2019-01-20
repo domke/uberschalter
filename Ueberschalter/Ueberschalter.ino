@@ -9,8 +9,8 @@
  ****************************************************************************/
  
 #define UART_UWE 2 /* (PD2) Pin for UART WRITE ENABLE */
-#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH); Serial.print(line); delay(5); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
-#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH); Serial.println(line); delay(5); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
+#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH);delay(15); Serial.print(line); delay(15); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
+#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH);delay(15); Serial.println(line); delay(15); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
 
 /****************************************************************************
  *  Hardware configuration
@@ -39,11 +39,7 @@ int lastButtonState2 = LOW;
 long lastDebounceTime1 = 0; // the last time the output pin was toggled
 long lastDebounceTime2 = 0;
 
-/* Reset Write Enable pin, when all data is transmitted */
-ISR(USART0_TXC)
-{ 
-  digitalWrite(UART_UWE, LOW);
-}
+
 
 void setup() {
   pinMode(button1, INPUT);
