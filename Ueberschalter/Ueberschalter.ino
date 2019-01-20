@@ -1,10 +1,10 @@
-#define MAX_LAMPS 8
+#define MAX_LAMPS 10
 
 // constants won't change. They're used here to
 // set pin numbers:
-const int button1 = 10; // the number of the pushbutton pin
-const int button2 = 11;
-const int lampPin[] = {2, 3, 4, 5, 6, 7, 8, 9}; // the number of the LED pin
+const int button1 = 7; // the number of the pushbutton pin
+const int button2 = 8;
+const int lampPin[] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18}; // the number of the LED pin
 int lampState[MAX_LAMPS];
 
 #define DEADTIME 1 // Totzeit, in der die Lampen nicht reagieren (in Sekunden)
