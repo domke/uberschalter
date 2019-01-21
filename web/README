@@ -1,0 +1,13 @@
+Einfaches Webinterface zur Steuerung der Lampen im C3MA Raum. Die Kommunikation mit dem „Backend“ erfolgt über MQTT.
+
+Vorraussetzungen:
+* Webserver mit PHP
+* Laufender MQTT-Broker
+* Laufender Daemon für die Kommunikation mit dem µC
+
+Verwendete externe Komponten:
+* [Bootstrap](https://getbootstrap.com/)
+* [Bootstrap Switch](http://www.bootstrap-switch.org/)
+* [jQuery](https://jquery.com/)
+* [phpMQTT](https://github.com/bluerhinos/phpMQTT)
+
